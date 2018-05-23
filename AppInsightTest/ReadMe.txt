@@ -1,0 +1,1 @@
+﻿This is a silly little app to send some requests and log to Application Insights. This is not for displaying App Insight info, it is only (for now) available in portal
