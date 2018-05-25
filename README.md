@@ -4,6 +4,10 @@ The main purpose of this app is to log telemetry of API calls and the surroundin
 
 Once this app has run a few times, you would want to query [app insights](https://azure.microsoft.com/en-us/services/application-insights/). This app will also allow you to run some queries and have Json returned to you, please see the .cs file called __ConstQueryString__ for examples. 
 
+Resources:
+- [Language Reference](https://docs.loganalytics.io/docs/Language-Reference/Tabular-operators/join-operator/Time-window-join)
+- [API Explorer](https://dev.applicationinsights.io/apiexplorer/metrics)
+
 Here are a few queries to view the responses from your api calls in Application Insights (The queries for c# api call looks same as below). 
 
 ### Dependencies
