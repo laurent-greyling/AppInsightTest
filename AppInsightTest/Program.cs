@@ -11,6 +11,10 @@ namespace AppInsightTest
                 var sendApiCall =  new SendApiCallsAppInsights();
                 await sendApiCall.SendAsync();
             }
+
+            //Add more to the string by looking what you might need in ConstQueryString e.g {ConstQueryString.AllDependencies}{ConstQueryString.Count}
+            var queryString = $"{ConstQueryString.JoinWithDataTable}";
+            var result = await new AppInsightsInformation().GetAsync(queryString);
         }
     }
 }
