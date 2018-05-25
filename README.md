@@ -1,6 +1,6 @@
 # AppInsightTest
 
-The main purpose of this app is to log telemetry of API calls and the surrounding data for how many successful calls and the duration of these calls per api. But this is also a bit of a helper and demo into how you can use telemetry in you app and get some information back programatically. 
+The main purpose of this app is to log telemetry of API calls and the surrounding data for how many successful calls and the duration of these calls per api. But this is also a bit of a helper and demo into how you can use telemetry in you app and get some information back programatically. If you need a playground, microsoft provides one [here](https://docs.loganalytics.io/index)
 
 Once this app has run a few times, you would want to query [app insights](https://azure.microsoft.com/en-us/services/application-insights/). This app will also allow you to run some queries and have Json returned to you, please see the .cs file called __ConstQueryString__ for examples. 
 
