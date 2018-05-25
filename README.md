@@ -1,8 +1,6 @@
 # AppInsightTest
 
-(will add more details in time)
-
-Once this app has run a few times, you would want to query app insights.
+Once this app has run a few times, you would want to query [app insights](https://azure.microsoft.com/en-us/services/application-insights/). This app will also allow you to run some queries and have Json returned to you, please see the .cs file called __ConstQueryString__ for examples. 
 
 Here are a few queries to view the responses from your api calls in Application Insights
 
