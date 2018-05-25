@@ -4,5 +4,6 @@
     {
         public const string InstrumentationKey = "";
         public const string WeatherApiKey = "";
+        public const bool SendApiCall = true;
     }
 }
