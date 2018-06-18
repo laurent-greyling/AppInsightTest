@@ -3,6 +3,7 @@ using Microsoft.ApplicationInsights.DataContracts;
 using Microsoft.ApplicationInsights.DependencyCollector;
 using Microsoft.ApplicationInsights.Extensibility;
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -13,7 +14,7 @@ namespace AppInsightTest
     {
         static TelemetryConfiguration Configuration = TelemetryConfiguration.Active;
 
-        public async Task SendAsync()
+        public async Task SendAsync(string eventName, string requestUri)
         {
             Configuration.InstrumentationKey = AppConst.InstrumentationKey;
             Configuration.TelemetryInitializers.Add(new OperationCorrelationTelemetryInitializer());
@@ -29,44 +30,45 @@ namespace AppInsightTest
                 //this should be automatically tracked
                 using (var httpClient = new HttpClient())
                 {
+                    var isNotException = true;
+                    var result = new HttpResponseMessage();
                     try
-                    {
-                        var weatherKey = AppConst.WeatherApiKey;
-                        var weatherResult = await httpClient.GetAsync($"http://api.openweathermap.org/data/2.5/weather?q=Amsterdam,NLD&APPID={weatherKey}");
-
-                        var w = new RequestTelemetry
-                        {
-                            Name = "Weather",
-                            Success = weatherResult.StatusCode == HttpStatusCode.OK,
-                            Timestamp = (DateTimeOffset)weatherResult.Headers.Date,
-                            ResponseCode = weatherResult.StatusCode.ToString(),
-                            Url = new Uri("http://api.openweathermap.org/data/2.5"),
-                        };
-
-                        telemetryClient.TrackRequest(w);
-                        Console.WriteLine($"Weather Api Result Code: {weatherResult.StatusCode}");
-
-                        var currencyResult = await httpClient.GetAsync($"http://api.fixer.io/latest");
-                        var c = new RequestTelemetry
-                        {
-                            Name = "Currency",
-                            Success = currencyResult.StatusCode == HttpStatusCode.OK,
-                            Timestamp = (DateTimeOffset)currencyResult.Headers.Date,
-                            ResponseCode = currencyResult.StatusCode.ToString(),
-                            Url = new Uri("http://api.fixer.io/latest")
-                        };
-
-                        telemetryClient.TrackRequest(c);
-
-                        Console.WriteLine($"Currency Api Result Code: {currencyResult.StatusCode}");
-
-                        var noneResult = await httpClient.GetAsync($"http://api.idonotexist.nl");
+                    {                       
+                        result = await httpClient.GetAsync(requestUri);
                     }
                     catch (Exception ex)
                     {
-                        telemetryClient.TrackTrace("Hallo World");
+                        isNotException = false;
                         telemetryClient.TrackException(ex);
                         Console.WriteLine($"{ex.Message}");
+                    }
+                    finally
+                    {
+                        var requestTelemetry = new RequestTelemetry
+                        {
+                            Name = eventName,
+                            Success = isNotException ? true : false,
+                            Timestamp = isNotException ? (DateTimeOffset)result.Headers.Date : DateTimeOffset.UtcNow,
+                            ResponseCode = isNotException ? result.StatusCode.ToString() : HttpStatusCode.BadRequest.ToString(),
+                            Url = new Uri(requestUri),
+                        };
+
+                        var appEvent = new Dictionary<string, string>
+                        {
+                            { "ApiUrl", requestUri },
+                            { "TimeStamp",  isNotException ? result.Headers.Date.ToString() : DateTimeOffset.UtcNow.ToString() },
+                            { "ResponseCode", isNotException ? result.StatusCode.ToString() : HttpStatusCode.BadRequest.ToString() },
+                            { "IsSuccess",  isNotException ? result.IsSuccessStatusCode.ToString() : "false" },
+                            { "AppVersion", isNotException ? result.Version.ToString() : "" }
+                        };
+
+                        telemetryClient.TrackEvent(eventName, appEvent);
+                        telemetryClient.TrackRequest(requestTelemetry);
+
+                        if (!isNotException)
+                        {
+                            Console.WriteLine($"Api Result Code: {result.StatusCode}");
+                        }
                     }
 
                     telemetryClient.Flush();
