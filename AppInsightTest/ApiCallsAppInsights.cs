@@ -47,7 +47,7 @@ namespace AppInsightTest
                         var requestTelemetry = new RequestTelemetry
                         {
                             Name = eventName,
-                            Success = isNotException ? true : false,
+                            Success = isNotException ? result.IsSuccessStatusCode : false,
                             Timestamp = isNotException ? (DateTimeOffset)result.Headers.Date : DateTimeOffset.UtcNow,
                             ResponseCode = isNotException ? result.StatusCode.ToString() : HttpStatusCode.BadRequest.ToString(),
                             Url = new Uri(requestUri),
