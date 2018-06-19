@@ -10,10 +10,10 @@ namespace AppInsightTest
         {
             if (AppConst.SendApiCall)
             {
-                var sendApiCall =  new SendApiCallsAppInsights();
-                await sendApiCall.SendAsync("AppEvent", $"http://api.openweathermap.org/data/2.5/weather?q=Amsterdam,NLD&APPID={AppConst.WeatherApiKey}");
-                await sendApiCall.SendAsync("AppEvent", $"http://data.fixer.io/api/latest?access_key={AppConst.CurrencyApiKey}");
-                await sendApiCall.SendAsync("AppEvent", $"http://api.idonotexist.nl");
+                var apiCall =  new ApiCallsAppInsights();
+                await apiCall.SendAsync("AppEvent", $"http://api.openweathermap.org/data/2.5/weather?q=Amsterdam,NLD&APPID={AppConst.WeatherApiKey}");
+                await apiCall.SendAsync("AppEvent", $"http://data.fixer.io/api/latest?access_key={AppConst.CurrencyApiKey}");
+                await apiCall.SendAsync("AppEvent", $"http://api.idonotexist.nl");
             }
 
             //TODO: this does not work completely yet, will get the json but not deserialise

@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace AppInsightTest
 {
-    public class SendApiCallsAppInsights
+    public class ApiCallsAppInsights
     {
         static TelemetryConfiguration Configuration = TelemetryConfiguration.Active;
 
